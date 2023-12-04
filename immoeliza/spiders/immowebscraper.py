@@ -46,9 +46,14 @@ class ImmowebscraperSpider(SitemapSpider):
     def parse_property(self,response):
         jscript=response.xpath("//script[contains(.,'window.dataLayer')]/text()")[0].get()
         it=ImmoItem()
-        jscript=re.sub("^[ \n\t]+window.dataLayer ?=","",jscript)
-        jscript=re.sub(";[ \n\t]*$","",jscript)
-        it["js"]=json.loads(jscript)[0]["classified"]
+        jscript=re.sub("^.*window.dataLayer ?=","",jscript,flags=re.DOTALL)
+        jscript=re.sub("\];.*$","]",jscript,flags=re.DOTALL)
+        try:
+            js=json.loads(jscript)
+        except : 
+            print(jscript)
+            exit()
+        it["js"]=js[0]["classified"]
         it["html_elems"]=self.get_html_elem(response)
         it["Url"]=response.url
         yield it
