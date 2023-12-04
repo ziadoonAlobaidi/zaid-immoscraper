@@ -1,0 +1,3 @@
+scraping
+bs4
+pymongo
