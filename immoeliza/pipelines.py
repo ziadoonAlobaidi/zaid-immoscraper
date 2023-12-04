@@ -4,17 +4,22 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+#from itemadapter import ItemAdapter
 import json
 import pandas as pd
+#from pymongo import MongoClient
+
 
 class ImmoelizaPipeline:
+    #def open_spider(self,spider):
+    #    self.db=MongoClient("localhost").get_database("immoeliza")
     def process_item(self, item, spider):
         item.transform()
         for field in item.fields:
             item.setdefault(field,None)
         item.pop("js")
         item.pop("html_elems")
+        #self.db["properties"].insert_one(ItemAdapter(item).asdict())
         return item
     
     def close_spider(self, spider):
