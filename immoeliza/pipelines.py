@@ -25,10 +25,4 @@ class ImmoelizaPipeline:
     def close_spider(self, spider):
         print("SPIDER FINISHED!!!")
         #js=json.load(open("output.json"))
-        df=pd.read_json("data/output.json")
-        df.dropna(subset=["Price","PostalCode"],inplace=True)
-        df.drop(df[df["PostalCode"]>10000].index,inplace=True)
-        df.drop_duplicate(subset=["Price","Bedrooms","LivingArea"],inplace=True)
-        df.to_json("data/dataset.json",orient="records")
-        os.remove("data/output.json")
         
