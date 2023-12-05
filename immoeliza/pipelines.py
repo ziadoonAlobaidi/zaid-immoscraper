@@ -5,7 +5,7 @@
 
 # useful for handling different item types with a single interface
 #from itemadapter import ItemAdapter
-import json
+import json,os
 import pandas as pd
 #from pymongo import MongoClient
 
@@ -30,4 +30,5 @@ class ImmoelizaPipeline:
         df.drop(df[df["PostalCode"]>10000].index,inplace=True)
         df.drop_duplicate(subset=["Price","Bedrooms","LivingArea"],inplace=True)
         df.to_json("data/dataset.json",orient="records")
+        os.remove("data/output.json")
         
