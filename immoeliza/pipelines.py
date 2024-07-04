@@ -12,6 +12,14 @@ import pandas as pd
 
 class ImmoelizaPipeline:
     def process_item(self, item, spider):
+        """
+        actions performed after the crawling is done.
+        data cleaning, data post processing.
+        removing duplicates and removing unusable entries (no price, no postal code)
+
+        Args:
+            spider (ImmowebscraperSpider): the spider itself
+        """
         item.transform()
         for field in item.fields:
             item.setdefault(field,None)
@@ -20,6 +28,14 @@ class ImmoelizaPipeline:
         return item
     
     def close_spider(self, spider):
+        """
+        actions performed after the crawling is done.
+        data cleaning, data post processing.
+        removing duplicates and removing unusable entries (no price, no postal code)
+
+        Args:
+            spider (ImmowebscraperSpider): the spider itself
+        """
         print("SPIDER FINISHED!!! ------ Post processing data")
         df=pd.read_json("data/output.json")
         df.dropna(subset=["Price","PostalCode"],inplace=True)

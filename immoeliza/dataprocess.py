@@ -22,6 +22,13 @@ mapping={
 
 
 class ImmoItem(Item):
+    """
+    Item object that represent a real estate property
+    it defines all the interesting information we want to keep from the website for the real estate properties
+
+    Args:
+        Item: Scrapy default item type
+    """
     js=Field()
     html_elems=Field()
     Url=Field()
@@ -48,6 +55,9 @@ class ImmoItem(Item):
     
     
     def transform(self):
+        """
+            Update the object with the values that are in the js and html
+        """
         self["Openfire"]=False
         self["Furnished"]=False
         self["Terrace"]=False

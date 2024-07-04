@@ -31,7 +31,7 @@ class ImmowebscraperSpider(SitemapSpider):
             response (scrapy.http.Response): result of the http requests
 
         Yields:
-            _type_: _description_
+            Response: result of http request to the xml files structuring the site
         """
         body=self._get_sitemap_body(response)
         s=Sitemap(body)
@@ -43,7 +43,7 @@ class ImmowebscraperSpider(SitemapSpider):
         
     def _filter(self,entries):
         for entry in entries:
-            if "en/classified" in entry.text and  ("apartement" in entry.text or "house" in entry.text) :
+            if "en/classified" in entry.text and  ("apartment" in entry.text or "house" in entry.text) :
                 yield entry.text        
     
     def parse_xml_page(self,response):
