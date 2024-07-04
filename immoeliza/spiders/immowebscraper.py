@@ -24,7 +24,15 @@ class ImmowebscraperSpider(SitemapSpider):
         super().__init__(*args, **kwargs)
     
     def _parse_sitemap(self, response):
-        
+        """
+         function handling the sitemap (.xml file) and send every link to be treated
+
+        Args:
+            response (scrapy.http.Response): result of the http requests
+
+        Yields:
+            _type_: _description_
+        """
         body=self._get_sitemap_body(response)
         s=Sitemap(body)
         for loc in iterloc(s):
