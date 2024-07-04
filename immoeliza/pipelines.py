@@ -11,18 +11,19 @@ import pandas as pd
 
 
 class ImmoelizaPipeline:
-    #def open_spider(self,spider):
-    #    self.db=MongoClient("localhost").get_database("immoeliza")
     def process_item(self, item, spider):
         item.transform()
         for field in item.fields:
             item.setdefault(field,None)
         item.pop("js")
         item.pop("html_elems")
-        #self.db["properties"].insert_one(ItemAdapter(item).asdict())
         return item
     
     def close_spider(self, spider):
-        print("SPIDER FINISHED!!!")
-        #js=json.load(open("output.json"))
+        print("SPIDER FINISHED!!! ------ Post processing data")
+        df=pd.read_json("output.json")
+        df.dropna(subset=["Price","PostalCode"],inplace=True)
+        df.drop(df[df["PostalCode"]>10000].index,inplace=True)
+        df.drop_duplicate(subset=["Price","Bedrooms","LivingArea"],inplace=True)
+        df.to_json("dataset.json")
         

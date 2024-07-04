@@ -12,6 +12,9 @@ from scrapy.utils.sitemap import Sitemap
 from bs4 import BeautifulSoup
 
 class ImmowebscraperSpider(SitemapSpider):
+    """
+    spider to crawl immoweb website using sitemap
+    """
     name = "immowebscraper"
     allowed_domains = ["immoweb.be"]
     sitemap_urls=["https://www.immoweb.be/sitemap.xml"]
@@ -21,6 +24,7 @@ class ImmowebscraperSpider(SitemapSpider):
         super().__init__(*args, **kwargs)
     
     def _parse_sitemap(self, response):
+        
         body=self._get_sitemap_body(response)
         s=Sitemap(body)
         for loc in iterloc(s):
@@ -46,14 +50,8 @@ class ImmowebscraperSpider(SitemapSpider):
     def parse_property(self,response):
         jscript=response.xpath("//script[contains(.,'window.dataLayer')]/text()")[0].get()
         it=ImmoItem()
-        jscript=re.sub("^.*window.dataLayer ?=","",jscript,flags=re.DOTALL)
-        jscript=re.sub("\];.*$","]",jscript,flags=re.DOTALL)
-        try:
-            js=json.loads(jscript)
-        except : 
-            print(jscript)
-            exit()
-        it["js"]=js[0]["classified"]
+        jscript=re.search("window.dataLayer.push\((.+?)\);",jscript,flags=re.DOTALL).group(1)
+        it["js"]=json.loads(jscript)["classified"]
         it["html_elems"]=self.get_html_elem(response)
         it["Url"]=response.url
         yield it
