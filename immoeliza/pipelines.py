@@ -37,9 +37,8 @@ class ImmoelizaPipeline:
             spider (ImmowebscraperSpider): the spider itself
         """
         print("SPIDER FINISHED!!! ------ Post processing data")
-        df=pd.read_json("data/output.json")
+        df=pd.read_json("data/output.json",orient="columns")
         df.dropna(subset=["Price","PostalCode"],inplace=True)
         df.drop(df[df["PostalCode"]>10000].index,inplace=True)
-        df.drop_duplicates(subset=["Price","Bedrooms","LivingArea"],inplace=True)
         df.to_json("data/final_dataset.json")
         
